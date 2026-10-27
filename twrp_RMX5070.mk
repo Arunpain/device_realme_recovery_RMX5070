@@ -7,6 +7,9 @@
 # Inherit from TWRP common
 $(call inherit-product, vendor/twrp/config/common.mk)
 
+# Inherit from device makefile
+$(call inherit-product, device/realme/RMX5070/device.mk)
+
 # Device identifier
 PRODUCT_DEVICE := RMX5070
 PRODUCT_NAME := twrp_RMX5070

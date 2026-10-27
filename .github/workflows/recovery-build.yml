@@ -1,0 +1,92 @@
+name: Build Recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_BRANCH:
+        description: 'Recovery Manifest Branch'
+        required: true
+        default: 'twrp-12.1'
+        type: choice
+        options:
+          - twrp-12.1
+          - twrp-14
+          - fox_12.1
+      BUILD_TARGET:
+        description: 'Target partition image'
+        required: true
+        default: 'recoveryimage'
+        type: choice
+        options:
+          - recoveryimage
+          - bootimage
+          - vendor_bootimage
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Device Tree
+        uses: actions/checkout@v4
+        with:
+          path: device/realme/RMX5070
+
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Set up Build Environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-core gnupg flex bison build-essential zip curl zlib1g-dev \
+            libc6-dev-i386 libncurses5 x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev \
+            libxml2 libxml2-utils xsltproc unzip fontconfig python3 rsync bc cpio
+
+      - name: Install Repo Tool
+        run: |
+          mkdir -p ~/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+          sudo ln -sf ~/bin/repo /usr/bin/repo
+
+      - name: Initialize Recovery Source Tree
+        run: |
+          mkdir -p ~/work
+          cd ~/work
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          if [ "${{ github.event.inputs.MANIFEST_BRANCH }}" = "fox_12.1" ]; then
+            repo init --depth=1 -u https://gitlab.com/OrangeFox/manifest.git -b fox_12.1
+          else
+            repo init --depth=1 -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b ${{ github.event.inputs.MANIFEST_BRANCH }}
+          fi
+          repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+      - name: Place Device Tree
+        run: |
+          mkdir -p ~/work/device/realme
+          cp -r ${{ github.workspace }}/device/realme/RMX5070 ~/work/device/realme/
+
+      - name: Build Recovery
+        run: |
+          cd ~/work
+          source build/envsetup.sh
+          export ALLOW_MISSING_DEPENDENCIES=true
+          lunch twrp_RMX5070-eng
+          mka ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all)
+
+      - name: Upload Recovery Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-${{ github.event.inputs.MANIFEST_BRANCH }}-${{ github.run_id }}
+          path: |
+            ~/work/out/target/product/RMX5070/recovery.img
+            ~/work/out/target/product/RMX5070/boot.img
+            ~/work/out/target/product/RMX5070/vendor_boot.img
+            ~/work/out/target/product/RMX5070/OrangeFox-*.zip

@@ -14,38 +14,46 @@
 #       from this software without specific prior written permission.
 #
 
-#<src>                                 <mnt_point>     <type>   <mnt_flags and options>           <fs_mgr_flags>
-system                                  /system         ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-system                                  /system         erofs   ro                                wait,logical,first_stage_mount,nofail
-system_ext                              /system_ext     ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-system_ext                              /system_ext     erofs   ro                                wait,logical,first_stage_mount,nofail
-vendor                                  /vendor         ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-vendor                                  /vendor         erofs   ro                                wait,logical,first_stage_mount,nofail
-product                                 /product        ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-product                                 /product        erofs   ro                                wait,logical,first_stage_mount,nofail
-odm                                     /odm            ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-odm                                     /odm            erofs   ro                                wait,logical,first_stage_mount,nofail
-my_product                              /my_product     ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_product                              /my_product     erofs   ro                                wait,logical,first_stage_mount,nofail
-my_engineering                          /my_engineering ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_engineering                          /my_engineering erofs   ro                                wait,logical,first_stage_mount,nofail
-my_company                              /my_company     ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_company                              /my_company     erofs   ro                                wait,logical,first_stage_mount,nofail
-my_carrier                              /my_carrier     ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_carrier                              /my_carrier     erofs   ro                                wait,logical,first_stage_mount,nofail
-my_region                               /my_region      ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_region                               /my_region      erofs   ro                                wait,logical,first_stage_mount,nofail
-my_heytap                               /my_heytap      ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_heytap                               /my_heytap      erofs   ro                                wait,logical,first_stage_mount,nofail
-my_stock                                /my_stock       ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_stock                                /my_stock       erofs   ro                                wait,logical,first_stage_mount,nofail
-my_preload                              /my_preload     ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_preload                              /my_preload     erofs   ro                                wait,logical,first_stage_mount,nofail
-my_bigball                              /my_bigball     ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_bigball                              /my_bigball     erofs   ro                                wait,logical,first_stage_mount,nofail
-my_manifest                             /my_manifest    ext4    ro,barrier=1                      wait,logical,first_stage_mount,nofail
-my_manifest                             /my_manifest    erofs   ro                                wait,logical,first_stage_mount,nofail
+#<src>                                                 <mnt_point>      <type>  <mnt_flags and options>                                       <fs_mgr_flags>
+system                                                  /system          ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+system                                                  /system          erofs   ro                                                            wait,logical,first_stage_mount,nofail
+system_ext                                              /system_ext      ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+system_ext                                              /system_ext      erofs   ro                                                            wait,logical,first_stage_mount,nofail
+vendor                                                  /vendor          ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+vendor                                                  /vendor          erofs   ro                                                            wait,logical,first_stage_mount,nofail
+product                                                 /product         ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+product                                                 /product         erofs   ro                                                            wait,logical,first_stage_mount,nofail
+odm                                                     /odm             ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+odm                                                     /odm             erofs   ro                                                            wait,logical,first_stage_mount,nofail
+vendor_dlkm                                             /vendor_dlkm     ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+vendor_dlkm                                             /vendor_dlkm     erofs   ro                                                            wait,logical,first_stage_mount,nofail
+system_dlkm                                             /system_dlkm     ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+system_dlkm                                             /system_dlkm     erofs   ro                                                            wait,logical,first_stage_mount,nofail
 
-/dev/block/bootdevice/by-name/metadata   /metadata      ext4    noatime,nosuid,nodev,discard,data=journal,commit=1      wait,formattable,first_stage_mount,metadata_csum
-/dev/block/bootdevice/by-name/userdata   /data          f2fs    noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier,inlinecrypt   latemount,wait,resize,check,formattable,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized+wrappedkey_v0,metadata_encryption=aes-256-xts:wrappedkey_v0,keydirectory=/metadata/vold/metadata_encryption,quota,reservedsize=128M,sysfs_path=/sys/devices/platform/soc/1d84000.ufshc,checkpoint=fs,fscompress
-/dev/block/bootdevice/by-name/misc       /misc          emmc    defaults                           defaults
+# Realme / Oplus dynamic partitions
+my_product                                              /my_product      ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_product                                              /my_product      erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_engineering                                          /my_engineering  ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_engineering                                          /my_engineering  erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_company                                              /my_company      ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_company                                              /my_company      erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_carrier                                              /my_carrier      ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_carrier                                              /my_carrier      erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_region                                               /my_region       ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_region                                               /my_region       erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_heytap                                               /my_heytap       ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_heytap                                               /my_heytap       erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_stock                                                /my_stock        ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_stock                                                /my_stock        erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_preload                                              /my_preload      ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_preload                                              /my_preload      erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_bigball                                              /my_bigball      ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_bigball                                              /my_bigball      erofs   ro                                                            wait,logical,first_stage_mount,nofail
+my_manifest                                             /my_manifest     ext4    ro,barrier=1                                                  wait,logical,first_stage_mount,nofail
+my_manifest                                             /my_manifest     erofs   ro                                                            wait,logical,first_stage_mount,nofail
+
+# Core block partitions
+/dev/block/bootdevice/by-name/metadata                  /metadata        f2fs    noatime,nosuid,nodev,discard                                  wait,check,formattable,first_stage_mount
+/dev/block/bootdevice/by-name/metadata                  /metadata        ext4    noatime,nosuid,nodev,discard,data=journal,commit=1            wait,formattable,first_stage_mount,nofail
+/dev/block/bootdevice/by-name/userdata                  /data            f2fs    noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier,inlinecrypt   latemount,wait,resize,check,formattable,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized+wrappedkey_v0,metadata_encryption=aes-256-xts:wrappedkey_v0,keydirectory=/metadata/vold/metadata_encryption,quota,reservedsize=128M,sysfs_path=/sys/devices/platform/soc/1d84000.ufshc,checkpoint=fs,fscompress
+/dev/block/bootdevice/by-name/misc                      /misc            emmc    defaults                                                      defaults
