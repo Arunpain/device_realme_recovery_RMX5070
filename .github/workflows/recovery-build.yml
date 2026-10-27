@@ -20,7 +20,7 @@ on:
         options:
           - recoveryimage
           - bootimage
-          - vendor_bootimage
+          - vendorbootimage
 
 jobs:
   build:
@@ -70,8 +70,8 @@ jobs:
 
       - name: Place Device Tree
         run: |
-          mkdir -p ~/work/device/realme
-          cp -r ${{ github.workspace }}/device/realme/RMX5070 ~/work/device/realme/
+          mkdir -p ~/work/device/realme/RMX5070
+          cp -r ${{ github.workspace }}/device/realme/RMX5070/* ~/work/device/realme/RMX5070/
 
       - name: Build Recovery
         run: |
@@ -81,12 +81,19 @@ jobs:
           lunch twrp_RMX5070-eng
           mka ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all)
 
+      - name: Stage Artifacts
+        if: always()
+        run: |
+          mkdir -p "${{ github.workspace }}/output"
+          OUT_DIR="${HOME}/work/out/target/product/RMX5070"
+          if [ -d "$OUT_DIR" ]; then
+            find "$OUT_DIR" -maxdepth 1 -type f \( -name "*.img" -o -name "OrangeFox-*.zip" -o -name "twrp-*.zip" \) -exec cp -v {} "${{ github.workspace }}/output/" \;
+          fi
+          echo "Staged files for upload:"
+          ls -la "${{ github.workspace }}/output"
+
       - name: Upload Recovery Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: recovery-${{ github.event.inputs.MANIFEST_BRANCH }}-${{ github.run_id }}
-          path: |
-            ~/work/out/target/product/RMX5070/recovery.img
-            ~/work/out/target/product/RMX5070/boot.img
-            ~/work/out/target/product/RMX5070/vendor_boot.img
-            ~/work/out/target/product/RMX5070/OrangeFox-*.zip
+          path: output/*

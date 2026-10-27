@@ -66,7 +66,9 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 
 	# Magisk
 	export FOX_USE_UPDATED_MAGISKBOOT=1
-	export FOX_USE_SPECIFIC_MAGISK_ZIP=$PWD/$DEVICE_PATH/Magisk/Magisk-v29.0.zip
+	if [ -f "$PWD/$DEVICE_PATH/Magisk/Magisk-v29.0.zip" ]; then
+		export FOX_USE_SPECIFIC_MAGISK_ZIP=$PWD/$DEVICE_PATH/Magisk/Magisk-v29.0.zip
+	fi
 
 	# Battery
 	export OF_USE_LEGACY_BATTERY_SERVICES=1
@@ -82,8 +84,8 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	lunch twrp_$FDEVICE-eng
 	# let's see what are our build VARs
 	if [ -n "$FOX_BUILD_LOG_FILE" -a -f "$FOX_BUILD_LOG_FILE" ]; then
-  	   export | grep "FOX" >> $FOX_BUILD_LOG_FILE
-  	   export | grep "OF_" >> $FOX_BUILD_LOG_FILE
+   	   export | grep "FOX" >> $FOX_BUILD_LOG_FILE
+   	   export | grep "OF_" >> $FOX_BUILD_LOG_FILE
    	   export | grep "TARGET_" >> $FOX_BUILD_LOG_FILE
   	   export | grep "TW_" >> $FOX_BUILD_LOG_FILE
  	fi
